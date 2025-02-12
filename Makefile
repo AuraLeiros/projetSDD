@@ -5,19 +5,19 @@ PROGRAMS = main
 
 .PHONY: all clean
 
-all = $(PROGRAMS)
+all: $(PROGRAMS)
 
 main: main.o biblioLC.o entreeSortieLC.o
 	$(CC) $(CFLAGS) -o $@ $^
 
 main.o: main.c
-	$(CC) $(CFLAGS) -c $^
+	$(CC) $(CFLAGS) -c $<
 
-biblioLC.o: biblioLC.c biblioLC.h
-	$(CC) $(CFLAGS) -c $^
+biblioLC.o: biblioLC.c
+	$(CC) $(CFLAGS) -c $<
 
-entreeSortieLC.o: entreeSortieLC.c entreeSortieLC.h
-	$(CC) $(CFLAGS) -c $^
+entreeSortieLC.o: entreeSortieLC.c
+	$(CC) $(CFLAGS) -c $<
 
 
 clean:
