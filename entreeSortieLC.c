@@ -122,15 +122,102 @@ Livre* recherche_titre(Biblio* b, char* titre){
 }
 
 // Recherche un livre par auteur
-Biblio* recherche_auteur(Biblio* b, char* auteur);
+Biblio* recherche_auteur(Biblio* b, char* auteur){
+
+    if (!b || !auteur){
+        fprintf(stderr, "Erreur dans les parametres\n");
+        return b;
+    }
+
+    /* TO-ASK: We suppose that we return a library even if the list is empty ?*/
+    Biblio* newBiblio = creer_biblio();
+    if (!newBiblio){
+        fprintf(stderr, "Erreur dans la creation d'une nouvelle bibliotheque\n");
+        return NULL;
+    }
+
+    Livre* idx = b->L;
+
+    while (idx) {
+        if (strcmp(idx->auteur, auteur) == 0) {
+            inserer_en_tete(newBiblio, idx->num, idx->titre, idx->auteur);
+        }
+
+        idx = idx->suiv;
+    }
+
+    return newBiblio;
+
+}
 
 // Supprime un ouvrage dans bibliotheque
-Biblio* suppresion_ouvrage(Biblio* b, int num, char* titre, char* auteur);
+Biblio* suppresion_ouvrage(Biblio* b, int num, char* titre, char* auteur){
+    // TO-ASK: We need to find the library using the three or we can just use num?
+    if (!b || !titre || !auteur) {
+        fprintf(stderr, "Erreur dans les parametres\n");
+        return NULL;
+    }
+
+    Livre* previousNode = NULL;
+    Livre* currentNode = b->L;
+
+    while (currentNode) {
+        if ((currentNode->num == num) && (strcmp(currentNode->titre, titre) == 0) && (strcmp(currentNode->auteur, auteur) == 0)) {
+            if (!previousNode) {
+                b->L = currentNode->suiv;
+            } else {
+                previousNode->suiv = currentNode->suiv;
+            }
+
+            liberer_livre(currentNode);
+            break;
+        }
+
+        previousNode = currentNode;
+        currentNode = currentNode->suiv;
+    }
+
+    if (!currentNode) fprintf(stderr, "Le livre n'a pas ete trouve dans la librarie\n");
+
+    return b;
+}
 
 // Fusion de deux bibliotheques
-Biblio* fusion_bibliotheques(Biblio* b1, Biblio* b2);
+Biblio* fusion_bibliotheques(Biblio* b1, Biblio* b2){
+    if (!b1 || !b2) {
+        fprintf(stderr, "Erreur dans les parametres\n");
+        return NULL;
+    }
+
+    Livre* idx = b1->L;
+
+    if (!idx) {
+        b1->L = b2->L;        
+    } else {
+        while (idx->suiv) idx = idx->suiv;
+        idx->suiv = b2->L;
+    }
+
+    free(b2);
+    return b1;
+}
 
 // Recherche de tous les ouvrages avec plusieurs exemplaires
-Livre* recherche_multiple(Biblio* b);
+Livre* recherche_multiple(Biblio* b){
+    if (!b) {
+        fprintf(stderr, "Erreur dans les parametres\n");
+        return NULL;
+    }
+
+    Livre* idx = b->L;
+    Livre* newLivre;
+
+    if (!idx) return NULL;
+
+    while (idx) {
+
+    }
+
+}
 
 
