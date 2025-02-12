@@ -3,6 +3,10 @@
 
 #include "biblioLC.h"
 
+#define MAX_LINE_LENGTH 256
+#define MAX_TITRE_LENGTH 128
+#define MAX_AUTEUR_LENGTH 128
+
 // Charger n livres depuis le fichier
 Biblio* charger_n_entrees(char* nomfic, int n);
 

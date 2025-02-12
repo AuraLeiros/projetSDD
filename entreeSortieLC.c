@@ -13,7 +13,8 @@ Biblio* charger_n_entrees(char* nomfic, int n){
     }
 
     int num;
-    char* titre, auteur;
+    char titre[MAX_TITRE_LENGTH];
+    char auteur[MAX_AUTEUR_LENGTH];
 
     Biblio* newBiblio = creer_biblio();
     if (!newBiblio){
@@ -21,12 +22,15 @@ Biblio* charger_n_entrees(char* nomfic, int n){
         return NULL;
     }
 
-    char ligne[256];
+    char ligne[MAX_LINE_LENGTH];
 
     for (int i=0; i < n; i++){
-        if (fgets(ligne, 256, f)){
-            sscanf(ligne, "%d %s %s", &num, titre, auteur);
-            inserer_en_tete(newBiblio, num, titre, auteur);
+        if (fgets(ligne, MAX_LINE_LENGTH, f)){
+            if (sscanf(ligne, "%d %s %s", &num, titre, auteur) == 3){
+                inserer_en_tete(newBiblio, num, titre, auteur);
+            } else {
+                fprintf(stderr, "Erreur de lecture d'une ligne\n");
+            }
         }
     }
 
@@ -52,9 +56,9 @@ void enregistrer_biblio(Biblio *b, char* nomfic){
 
 
     //TODO : check if the fprintf puts a newline automatically
-    while (b->l){
-        fprintf(f, "%d %s %s\n", b->l->num, b->l->titre, b->l->auteur);
-        b->l = b->l->suiv;
+    while (b->L){
+        fprintf(f, "%d %s %s\n", b->L->num, b->L->titre, b->L->auteur);
+        b->L = b->L->suiv;
     }
 
     fclose(f);
@@ -83,9 +87,9 @@ void afficher_biblio(Biblio* b){
 
     printf("Bibliotheque :\n\n");
 
-    while (b->l){
-        afficher_livre(b->l);
-        b->l = b->l->suiv;
+    while (b->L){
+        afficher_livre(b->L);
+        b->L = b->L->suiv;
     }
 
     return;
@@ -95,13 +99,13 @@ void afficher_biblio(Biblio* b){
 // Recherche par numéro
 Livre* recherche_numero(Biblio* b, int num){
     if (!b) {
-        fprintf(stderr, "La bibliothèque n'existe pas\n");
-        return;
+        fprintf(stderr, "La bibliotheque en parametre n'existe pas\n");
+        return NULL;
     }
 
-    while(b->l){
-        if (b->l->num == num) return b->l;
-        b->l = b->l->suiv;
+    while(b->L){
+        if (b->L->num == num) return b->L;
+        b->L = b->L->suiv;
     }
 
     return NULL;
@@ -110,13 +114,11 @@ Livre* recherche_numero(Biblio* b, int num){
 // Recherche titre
 Livre* recherche_titre(Biblio* b, char* titre){
     if (!b) {
-        fprintf(stderr, "La bibliothèque n'existe pas\n");
-        return;
+        fprintf(stderr, "La bibliotheque en parametre n'existe pas\n");
+        return NULL;
     }
 
-    while ()
-
-
+    return NULL;
 }
 
 // Recherche un livre par auteur

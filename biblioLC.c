@@ -7,7 +7,7 @@ Livre* creer_livre(int num, char* titre, char* auteur){
 
     Livre* newLivre = (Livre*)malloc(sizeof(Livre));
     if (!newLivre) {
-        fprintf(stderr, "Erreur dans l'allocation mémoire d'un nouveau livre\n");
+        fprintf(stderr, "Erreur dans l'allocation memoire d'un nouveau livre\n");
         return NULL;
     }
 
@@ -35,11 +35,11 @@ Biblio* creer_biblio(){
 
     Biblio* newBiblio = (Biblio*)malloc(sizeof(Biblio));
     if (!newBiblio) {
-        fprintf(stderr, "Erreur dans l'allocation mémoire d'une nouvelle bibliotheque\n");
+        fprintf(stderr, "Erreur dans l'allocation memoire d'une nouvelle bibliotheque\n");
         return NULL;
     }    
 
-    newBiblio->l = NULL;
+    newBiblio->L = NULL;
 
     return newBiblio;
 
@@ -47,12 +47,13 @@ Biblio* creer_biblio(){
 
 // Liberer une bibliotheque
 void liberer_biblio(Biblio* b){
-    
+    if (!b) return;
+
     Livre* idx;
 
-    while(b->l){
-        idx = b->l
-        b->l = b->l->suiv;
+    while(b->L){
+        idx = b->L;
+        b->L = b->L->suiv;
         liberer_livre(idx);
     }
 
@@ -61,7 +62,7 @@ void liberer_biblio(Biblio* b){
     return;
 }
 
-// Insertion en tete d'un nouveau livre
+/* Insertion en tete d'un nouveau livre */
 void inserer_en_tete(Biblio* b, int num, char* titre, char* auteur){
     if (!b) {
         fprintf(stderr, "La bibliotheque passe en parametre n'existe pas\n");
@@ -69,8 +70,13 @@ void inserer_en_tete(Biblio* b, int num, char* titre, char* auteur){
     }
 
     Livre* newLivre = creer_livre(num, titre, auteur);
-    newLivre->suiv = b->l;
-    b->l = newLivre;
+    if (!newLivre){
+        fprintf(stderr, "Erreur dans la creation et insertion en tete d'un nouveau livre\n");
+        return;
+    }
+
+    newLivre->suiv = b->L;
+    b->L = newLivre;
 
     return;
 }
