@@ -118,6 +118,16 @@ Livre* recherche_titre(Biblio* b, char* titre){
         return NULL;
     }
 
+    Livre* idx = b->L;
+
+    /* Cas 1: Librarie vide*/
+    if (!idx) return NULL;
+
+    while (idx) {
+        if (strcmp(idx->titre, titre) == 0) return idx;
+        idx = idx->suiv;
+    }
+
     return NULL;
 }
 
@@ -129,7 +139,6 @@ Biblio* recherche_auteur(Biblio* b, char* auteur){
         return b;
     }
 
-    /* TO-ASK: We suppose that we return a library even if the list is empty ?*/
     Biblio* newBiblio = creer_biblio();
     if (!newBiblio){
         fprintf(stderr, "Erreur dans la creation d'une nouvelle bibliotheque\n");
@@ -152,7 +161,6 @@ Biblio* recherche_auteur(Biblio* b, char* auteur){
 
 // Supprime un ouvrage dans bibliotheque
 Biblio* suppresion_ouvrage(Biblio* b, int num, char* titre, char* auteur){
-    // TO-ASK: We need to find the library using the three or we can just use num?
     if (!b || !titre || !auteur) {
         fprintf(stderr, "Erreur dans les parametres\n");
         return NULL;
@@ -209,15 +217,61 @@ Livre* recherche_multiple(Biblio* b){
         return NULL;
     }
 
-    Livre* idx = b->L;
-    Livre* newLivre;
+    Livre* courant = b->L;
+    Livre* idx;
+    Livre* res;
+    Livre** tete;
+    Livre** fin;
+    
 
-    if (!idx) return NULL;
+    /* Cas 1: Aucun ouvrage present dans la bibliotheque */
+    if (!courant) return NULL;
+    
+    /* Traitement de la liste*/
+    while (lcourant){
+        auxRechercheAll(b->L, lcourant, tete, fin);
+        if (!(*res) && (*tete)) {
+            res = (*tete);
+            idx = (*fin);
+        } else if ((*tete) && (*fin)){
+            idx->suiv = (*tete);
+            idx = (*fin);
+        }
 
-    while (idx) {
-
+        *tete = NULL;
+        *fin = NULL;
+        lcourant = lcourant->suiv;
     }
 
+    return res;
 }
 
+void auxRechercheAll(Livre* l, Livre* lcourant, Livre** tete, Livre** fin){
+    /*
+    @brief Fonction auxiliaire qui trouve tous les livres avec meme titre et auteur mais numero different
+    si la fonction trouve de duplicatas enregistre le livre courant dans le param tete et ajoute a la liste
+    tous les elements trouves.
+    */
+    if (!l || !lcourant){
+        return NULL;
+    }
 
+    Livre* res = NULL;
+
+    while (l){
+        if ((lcourant->num != l->num) && (strcmp(lcourant->titre, l->titre) == 0) && (strcmp(lcourant->auteur, l->auteur) == 0)){
+            if (!res){
+                res = creer_livre(lcourant->num, lcourant->titre, lcourant->auteur);
+                tete = &res;
+            }
+
+            res->suiv = creer_livre(l->num, l->titre, l->auteur);
+            res = res->suiv;
+
+        }
+
+        l = l->suiv;
+    }
+
+    fin = &res;
+}
