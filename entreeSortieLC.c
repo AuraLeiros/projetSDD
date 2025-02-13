@@ -227,7 +227,7 @@ Livre* recherche_multiple(Biblio* b){
     /* Cas 1: Aucun ouvrage present dans la bibliotheque */
     if (!courant) return NULL;
     
-    /* Traitement de la liste*/
+    /* Traitement de chaque livre dans la liste */
     while (lcourant){
         auxRechercheAll(b->L, lcourant, tete, fin);
         if (!(*res) && (*tete)) {
@@ -252,6 +252,7 @@ void auxRechercheAll(Livre* l, Livre* lcourant, Livre** tete, Livre** fin){
     si la fonction trouve de duplicatas enregistre le livre courant dans le param tete et ajoute a la liste
     tous les elements trouves.
     */
+    
     if (!l || !lcourant){
         return NULL;
     }
