@@ -1,7 +1,10 @@
+#include <unistd.h>
 #include "biblioLC.h"
 #include "entreeSortieLC.h"
+
 #define MAX_USER_INPUT 8
 #define NB_OPTIONS 3
+
 
 int main(int argc, char** argv){
 
