@@ -4,7 +4,7 @@ Mini-Projet SDD
 
 ## Auteurs
 
-Anna Stan - anna.stanischewsky@etu.sorbonne-universite.fr\
+Anna - x - x@etu.sorbonne-universite.fr
 Aura Leirós García - 21218034 - aura.leiros@etu.sorbonne-universite.fr
 
 ### Metodologie
