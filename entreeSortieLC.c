@@ -228,9 +228,15 @@ Livre* recherche_multiple(Biblio* b){
     if (!courant) return NULL;
     
     /* Traitement de chaque livre dans la liste */
+<<<<<<< HEAD
     while (lcourant){
         auxRechercheAll(b->L, lcourant, tete, fin);
         if (!(*res) && (*tete)) {
+=======
+    while (courant){
+        auxRechercheAll(b->L, courant, tete, fin);
+        if ((res != NULL) && (*tete)) {
+>>>>>>> main
             res = (*tete);
             idx = (*fin);
         } else if ((*tete) && (*fin)){
@@ -240,7 +246,11 @@ Livre* recherche_multiple(Biblio* b){
 
         *tete = NULL;
         *fin = NULL;
+<<<<<<< HEAD
         lcourant = lcourant->suiv;
+=======
+        courant = courant->suiv;
+>>>>>>> main
     }
 
     return res;
