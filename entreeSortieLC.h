@@ -2,10 +2,7 @@
 #define ENTREESORTIELC_H
 
 #include "biblioLC.h"
-
-#define MAX_LINE_LENGTH 256
-#define MAX_TITRE_LENGTH 128
-#define MAX_AUTEUR_LENGTH 128
+#include "macros.h"
 
 // Charger n livres depuis le fichier
 Biblio* charger_n_entrees(char* nomfic, int n);
@@ -29,7 +26,7 @@ Livre* recherche_titre(Biblio* b, char* titre);
 Biblio* recherche_auteur(Biblio* b, char* auteur);
 
 // Supprime un ouvrage dans bibliotheque
-Biblio* suppresion_ouvrage(Biblio* b, int num, char* titre, char* auteur);
+void suppresion_ouvrage(Biblio* b, int num, char* titre, char* auteur);
 
 // Fusion de deux bibliotheques
 Biblio* fusion_bibliotheques(Biblio* b1, Biblio* b2);
@@ -37,8 +34,8 @@ Biblio* fusion_bibliotheques(Biblio* b1, Biblio* b2);
 // Recherche de tous les ouvrages avec plusieurs exemplaires
 Livre* recherche_multiple(Biblio* b);
 
-
-
+// Fonction auxiliaire à recherche_multiple
+void auxRechercheAll(Livre* l, Livre* lcourant, Livre** head, Livre** tail);
 
 
 

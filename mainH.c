@@ -1,6 +1,8 @@
-#include "biblioLC.h"
-#include "entreeSortieLC.h"
+
+#include "biblioH.h"
+#include "entreeSortieH.h"
 #include "utils.h"
+
 
 int main(int argc, char** argv){
 
@@ -8,11 +10,12 @@ int main(int argc, char** argv){
     int n = testInputs(argc, argv);
 
     /* Lecture du fichier */
-    Biblio* b = charger_n_entrees(argv[1], n);
+    BiblioH* b = charger_n_entrees(argv[1], n);
     if (!b){
         fprintf(stderr, "Erreur dans la lecture\n");
         return EXIT_FAILURE;
     }
+
 
     int usrInput;
 
@@ -20,8 +23,9 @@ int main(int argc, char** argv){
     char titre[MAX_TITRE_LENGTH] = "";
     int num = 0;
 
-    Livre* l = NULL;
-    Biblio* newBiblio = NULL;
+    LivreH* l = NULL;
+    BiblioH* newBiblio = NULL;
+
 
     do {
         menu();
@@ -40,11 +44,12 @@ int main(int argc, char** argv){
 
             case 2: 
                 printf("--- Inserer livre ---\n");
+                printf("Veuillez ecrire le numero, le titre et l'auteur de l'ouvrage\n");
 
                 readIdLivre(&num, auteur, titre);
 
                 if (num >= 0 && auteur[0] != '\0' && titre[0] != '\0'){
-                    inserer_en_tete(b, num, titre, auteur);
+                    inserer(b, num, titre, auteur);
                 } else {
                     printf("Erreur format\n");
                 }
@@ -86,15 +91,14 @@ int main(int argc, char** argv){
 
                 break;
 
-
             case 5:
                 printf("--- Recherche auteur ---");
 
                 readAuteur(auteur);
 
                 if (auteur[0] != '\0'){
-                    newBiblio = recherche_auteur(b, auteur);
-                    if (!b->L){
+                    l = recherche_auteur(b, auteur);
+                    if (!b->T){
                         fprintf(stderr, "Aucun livre avec le nom indique à ete trouve\n");
                     }
                 } else {
@@ -104,9 +108,10 @@ int main(int argc, char** argv){
                 printf("--- Fin recherche par auteur ---\n");
 
                 break;
-            
+
             case 6:
-            printf("--- Suppresion ouvrage ---\n");
+                printf("--- Suppresion ouvrage ---\n");
+                
                 readIdLivre(&num, auteur, titre);
 
                 if (num >= 0 && auteur[0] != '\0' && titre[0] != '\0'){
@@ -116,16 +121,17 @@ int main(int argc, char** argv){
                 }
 
                 break;
-        
+
             case 7:
                 printf("--- Fusion libraries ---\n");
                 fprintf(stderr, "Impossible de faire une option, on a pas d'autres libraries !");
                 printf("--- Fin Fusion libraries ---\n");
-
+                
             case 8:
                 printf("--- Recherche Multiples ---\n");
                 l = recherche_multiple(b);
                 printf("--- Fin Recherche Multiples ---\n");
+
 
             default:
                 printf("L'option demandé n'est pas disponible, veuillez selectionner une option entre 0 et %d", NB_OPTIONS);
@@ -134,7 +140,7 @@ int main(int argc, char** argv){
 
     } while (usrInput != 0);
 
-    /* Liberation de memoire */
+
     liberer_biblio(b);
     if (l) liberer_livre(l);
     if (newBiblio) liberer_biblio(newBiblio);

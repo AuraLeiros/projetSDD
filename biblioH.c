@@ -1,19 +1,31 @@
 #include "biblioH.h"
 
-//Creation de cle par hachage
-int fonction_cle(char* auteur){
-    int sum = 0;
-    int i = 0;
-    while((auteur + i)){
-        sum += atoi((auteur + i));
-        i++;
+int fonctionClef(char* auteur){
+    if (!auteur){
+        fprintf(stderr, "Aucun nom d'auteur a ete passe en parametre\n");
+        return -1;
     }
+
+    int sum = 0;
+    char* idx = auteur;
+
+    while(*idx) {
+        sum += (int)(*idx);
+        idx++;
+    }
+
     return sum;
 }
 
 //Fonction de hachage
-int fonction_hachage(int cle, int m){
-    return floor(m * ((cle * ((sqrt(5)-1)/2)) % 1));
+int fonctionHachage(int cle, int m){
+    
+    const double A = (sqrt(5) - 1) / 2;
+    double kA = cle * A;
+    double multip = m * (kA - floor(kA));
+    int hash = floor(multip);
+
+    return hash;
 }
 
 // Creation d'un livre
@@ -24,7 +36,7 @@ LivreH* creer_livre(int num,char* titre,char* auteur){
         return NULL;
     }
 
-    newLivre->cle = fonction_cle(auteur);
+    newLivre->cle = fonctionClef(auteur);
     newLivre->num = num;
     newLivre->titre = strdup(titre);
     newLivre->auteur = strdup(auteur);
@@ -54,7 +66,7 @@ BiblioH* creer_biblio(int m){
     }    
     newBiblio->nE = 0;
     newBiblio->m = m;
-    newBiblio->T = (LivreH*)malloc(m * sizeof(LivreH));
+    newBiblio->T = (LivreH**)calloc(m, sizeof(LivreH*));
 
     return newBiblio;
 }
@@ -63,16 +75,20 @@ BiblioH* creer_biblio(int m){
 void liberer_biblio(BiblioH* b){
     if (!b) return;
 
-    LivreH* idx;
+    LivreH* idx = NULL;
+    LivreH* curr = NULL;
 
-    for(int i = 0; i < (b->m); i++){
-        while(b->T[i]){
-            idx = b->T[i];
-            b->T = b->T[i]->suivant;
+    for (int i = 0; i < b->m; i++){
+        curr = b->T[i];
+        while (curr){
+            idx = curr;
+            curr = curr->suivant;
             liberer_livre(idx);
         }
+
+        b->T[i] = NULL;
+
     }
-    
 
     free(b);
 
@@ -87,11 +103,10 @@ void inserer(BiblioH* b, int num, char* titre, char* auteur){
         return;
     }
 
-    int h = fonction_hachage(newLivre->cle, b->m);
+    int h = fonctionHachage(newLivre->cle, b->m);
     
     newLivre->suivant = b->T[h];
     b->T[h] = newLivre;
 
     return;
 }
-

@@ -2,11 +2,7 @@
 #define ENTREESORTIEH_H
 
 #include "biblioH.h"
-
-#define MAX_LINE_LENGTH 256
-#define MAX_TITRE_LENGTH 128
-#define MAX_AUTEUR_LENGTH 128
-#define MAX_HACHAGE_LENGTH 300
+#include "macros.h"
 
 // Charger n livres depuis le fichier
 BiblioH* charger_n_entrees(char* nomfic, int n);
@@ -27,7 +23,7 @@ LivreH* recherche_numero(BiblioH* b, int num);
 LivreH* recherche_titre(BiblioH* b, char* titre);
 
 // Recherche un livre par auteur
-BiblioH* recherche_auteur(BiblioH* b, char* auteur);
+LivreH* recherche_auteur(BiblioH* b, char* auteur);
 
 // Supprime un ouvrage dans bibliotheque
 BiblioH* suppresion_ouvrage(BiblioH* b, int num, char* titre, char* auteur);
@@ -37,6 +33,9 @@ BiblioH* fusion_bibliotheques(BiblioH* b1, BiblioH* b2);
 
 // Recherche de tous les ouvrages avec plusieurs exemplaires
 LivreH* recherche_multiple(BiblioH* b);
+
+/* Fonction auxiliaire a inserer pour trouver tous les livres d'un meme auteur */
+void auxRechercheAll(LivreH* lcourant, LivreH** head, LivreH** tail);
 
 
 #endif

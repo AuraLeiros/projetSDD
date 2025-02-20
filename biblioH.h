@@ -4,6 +4,7 @@
 #define BIBLIOH_H
 
 #include <stdio.h>
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -21,14 +22,13 @@ typedef struct table{
     LivreH** T; /*table de hachage avec resolution des collisions par chainage */
 } BiblioH;
 
-
 /* FONCTIONS */
 
 //Creation de cle par hachage
-int fonction_cle(char* auteur);
+int fonctionClef(char* auteur);
 
 //Fonction de hachage
-int fonction_hachage(int cle, int m);
+int fonctionHachage(int cle, int m);
 
 // Creation d'un livre
 LivreH* creer_livre(int num,char* titre,char* auteur);
@@ -44,13 +44,6 @@ void liberer_biblio(BiblioH* b);
 
 // Insertion en tete d'un nouveau livre
 void inserer(BiblioH* b, int num, char* titre, char* auteur);
-
-
-
-
-
-
-
 
 
 #endif

@@ -137,16 +137,16 @@ LivreH* recherche_titre(BiblioH* b, char* titre){
 
     return NULL;
 }
-
+/* TO-ASK: Can we return a linked list of livreH* */
 // Recherche un livre par auteur (plus rapide que pour une bibliotheque en liste chainee car cle de hachage definie a partir de l'auteur)
-BiblioH* recherche_auteur(BiblioH* b, char* auteur){
+LivreH* recherche_auteur(BiblioH* b, char* auteur){
 
     if (!b || !auteur){
         fprintf(stderr, "Erreur dans les parametres\n");
-        return b;
+        return NULL;
     }
 
-    int h = fonction_hachage(fonction_cle(auteur), b->m);
+    int h = fonctionHachage(fonctionClef(auteur), b->m);
     
     return b->T[h];
 
@@ -159,7 +159,7 @@ BiblioH* suppresion_ouvrage(BiblioH * b, int num, char* titre, char* auteur){
         return NULL;
     }
 
-    int h = fonction_hachage(fonction_cle(auteur), b->m);
+    int h = fonctionHachage(fonctionClef(auteur), b->m);
 
     LivreH* previousNode = NULL;
     LivreH* currentNode = b->T[h];
@@ -208,73 +208,61 @@ BiblioH* fusion_bibliotheques(BiblioH* b1, BiblioH* b2){
     return b1;
 }
 
-// Recherche de tous les ouvrages avec plusieurs exemplaires
+
 LivreH* recherche_multiple(BiblioH* b){
-    if (!b) {
+    if (!b || !(b->T)) {
         fprintf(stderr, "Erreur dans les parametres\n");
         return NULL;
     }
 
+    LivreH* curr = NULL;
+    LivreH* res = NULL;
+    LivreH* tmp = NULL;
+    LivreH* head = NULL;
+    LivreH* tail = NULL;
 
-    LivreH* idx;
-    LivreH* res;
-    LivreH** tete;
-    LivreH** fin;
+    for (int i=0; i < b->m; i++){
+        curr = b->T[i];
 
-    for(int i = 0; i < b->m; i++){
-        LivreH* courant = b->T[i];
-        
-        /* Cas 1: Aucun ouvrage present dans la bibliotheque */
-        if (!courant) return NULL;
-    
-        /* Traitement de chaque livre dans la liste */
-        while (courant){
-            auxRechercheAll(b->T[i], courant, tete, fin);
-            if ((res != NULL) && (*tete)) {
-                res = (*tete);
-                idx = (*fin);
-            } else if ((*tete) && (*fin)){
-                idx->suivant = (*tete);
-                idx = (*fin);
+        auxRechercheAll(curr, &head, &tail);
+
+        if (head){
+            if (!res){
+                res = head;
+                tmp = tail;
+            } else {
+                tmp->suivant = head;
+                tmp = tail;
             }
-
-            *tete = NULL;
-            *fin = NULL;
-            courant = courant->suivant;
         }
+
+        head = NULL;
+        tail = NULL;
     }
-    
 
     return res;
+
 }
 
-void auxRechercheAll(LivreH* l, LivreH* lcourant, LivreH** tete, LivreH** fin){
-    /*
-    @brief Fonction auxiliaire qui trouve tous les livres avec meme titre et auteur mais numero different
-    si la fonction trouve de duplicatas enregistre le livre courant dans le param tete et ajoute a la liste
-    tous les elements trouves.
-    */
-    
-    if (!l || !lcourant){
-        return NULL;
-    }
+void auxRechercheAll(LivreH* lcourant, LivreH** head, LivreH** tail){
+    if (!lcourant) return;
 
-    LivreH* res = NULL;
+    LivreH* idx = lcourant;
 
-    while (l){
-        if ((lcourant->num != l->num) && (strcmp(lcourant->titre, l->titre) == 0) && (strcmp(lcourant->auteur, l->auteur) == 0)){
-            if (!res){
-                res = creer_livre(lcourant->num, lcourant->titre, lcourant->auteur);
-                tete = &res;
+    *head = NULL;
+    *tail = NULL;
+
+    while (idx) {
+        if ((lcourant->num != idx->num) && (strcmp(lcourant->titre, idx->titre) == 0) && (strcmp(lcourant->auteur, idx->auteur) == 0)) {
+            if (!(*head)){
+                *head = creer_livre(idx->num, idx->titre, idx->auteur);
+                *tail = *head;
+            } else {
+                (*tail)->suivant = creer_livre(idx->num, idx->titre, idx->auteur);
+                *tail = (*tail)->suivant;                
             }
-
-            res->suivant = creer_livre(l->num, l->titre, l->auteur);
-            res = res->suivant;
-
         }
 
-        l = l->suivant;
+        idx = idx->suivant;
     }
-
-    fin = &res;
 }

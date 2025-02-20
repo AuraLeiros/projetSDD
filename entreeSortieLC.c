@@ -1,7 +1,6 @@
 
 #include "entreeSortieLC.h"
 
-
 // Charger n livres depuis le fichier
 Biblio* charger_n_entrees(char* nomfic, int n){
 
@@ -31,6 +30,9 @@ Biblio* charger_n_entrees(char* nomfic, int n){
             } else {
                 fprintf(stderr, "Erreur de lecture d'une ligne\n");
             }
+        } else {
+            fprintf(stderr, "Warning : Le fichier a moins de %d lignes\n", n);
+            break;
         }
     }
 
@@ -160,10 +162,10 @@ Biblio* recherche_auteur(Biblio* b, char* auteur){
 }
 
 // Supprime un ouvrage dans bibliotheque
-Biblio* suppresion_ouvrage(Biblio* b, int num, char* titre, char* auteur){
+void suppresion_ouvrage(Biblio* b, int num, char* titre, char* auteur){
     if (!b || !titre || !auteur) {
         fprintf(stderr, "Erreur dans les parametres\n");
-        return NULL;
+        return;
     }
 
     Livre* previousNode = NULL;
@@ -178,7 +180,7 @@ Biblio* suppresion_ouvrage(Biblio* b, int num, char* titre, char* auteur){
             }
 
             liberer_livre(currentNode);
-            break;
+            return;
         }
 
         previousNode = currentNode;
@@ -186,8 +188,6 @@ Biblio* suppresion_ouvrage(Biblio* b, int num, char* titre, char* auteur){
     }
 
     if (!currentNode) fprintf(stderr, "Le livre n'a pas ete trouve dans la librarie\n");
-
-    return b;
 }
 
 // Fusion de deux bibliotheques
@@ -210,79 +210,67 @@ Biblio* fusion_bibliotheques(Biblio* b1, Biblio* b2){
     return b1;
 }
 
-// Recherche de tous les ouvrages avec plusieurs exemplaires
 Livre* recherche_multiple(Biblio* b){
     if (!b) {
         fprintf(stderr, "Erreur dans les parametres\n");
         return NULL;
     }
 
-    Livre* courant = b->L;
-    Livre* idx;
-    Livre* res;
-    Livre** tete;
-    Livre** fin;
-    
+    Livre* lcourant = b->L;
+    Livre* res = NULL;
+    Livre* tmp = NULL;
+    Livre* head = NULL;
+    Livre* tail = NULL;
 
-    /* Cas 1: Aucun ouvrage present dans la bibliotheque */
-    if (!courant) return NULL;
-    
     /* Traitement de chaque livre dans la liste */
-<<<<<<< HEAD
     while (lcourant){
-        auxRechercheAll(b->L, lcourant, tete, fin);
-        if (!(*res) && (*tete)) {
-=======
-    while (courant){
-        auxRechercheAll(b->L, courant, tete, fin);
-        if ((res != NULL) && (*tete)) {
->>>>>>> main
-            res = (*tete);
-            idx = (*fin);
-        } else if ((*tete) && (*fin)){
-            idx->suiv = (*tete);
-            idx = (*fin);
+
+        auxRechercheAll(b->L, lcourant, &head, &tail);
+
+        if (head){
+            if (!res){
+                res = head;
+                tmp = tail;
+            } else {
+                tmp->suiv = head;
+                tmp = tail;
+            }
         }
 
-        *tete = NULL;
-        *fin = NULL;
-<<<<<<< HEAD
+        head = NULL;
+        tail = NULL;
         lcourant = lcourant->suiv;
-=======
-        courant = courant->suiv;
->>>>>>> main
+
     }
 
     return res;
+
 }
 
-void auxRechercheAll(Livre* l, Livre* lcourant, Livre** tete, Livre** fin){
+
+void auxRechercheAll(Livre* l, Livre* lcourant, Livre** head, Livre** tail){
     /*
     @brief Fonction auxiliaire qui trouve tous les livres avec meme titre et auteur mais numero different
-    si la fonction trouve de duplicatas enregistre le livre courant dans le param tete et ajoute a la liste
+    si la fonction trouve de duplicatas enregistre le livre courant dans le param head et ajoute a la liste
     tous les elements trouves.
     */
     
     if (!l || !lcourant){
-        return NULL;
+        return;
     }
-
-    Livre* res = NULL;
 
     while (l){
         if ((lcourant->num != l->num) && (strcmp(lcourant->titre, l->titre) == 0) && (strcmp(lcourant->auteur, l->auteur) == 0)){
-            if (!res){
-                res = creer_livre(lcourant->num, lcourant->titre, lcourant->auteur);
-                tete = &res;
+            if (!*head){
+                *head = creer_livre(lcourant->num, lcourant->titre, lcourant->auteur);
+                *tail = *head;
+            } else {
+                (*tail)->suiv = creer_livre(l->num, l->titre, l->auteur);
+                *tail = (*tail)->suiv;
             }
-
-            res->suiv = creer_livre(l->num, l->titre, l->auteur);
-            res = res->suiv;
 
         }
 
         l = l->suiv;
     }
-
-    fin = &res;
 }
