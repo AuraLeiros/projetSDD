@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "macros.h"
+
 typedef struct livre {
     int num;
     char *titre;
@@ -36,13 +38,6 @@ void liberer_biblio(Biblio* b);
 
 // Insertion en tete d'un nouveau livre
 void inserer_en_tete(Biblio* b, int num, char* titre, char* auteur);
-
-
-
-
-
-
-
 
 
 #endif

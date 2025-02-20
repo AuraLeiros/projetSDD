@@ -1,6 +1,5 @@
 #include "biblioLC.h"
 
-
 // Creation d'un livre
 Livre* creer_livre(int num, char* titre, char* auteur){
 
@@ -80,5 +79,3 @@ void inserer_en_tete(Biblio* b, int num, char* titre, char* auteur){
 
     return;
 }
-
-

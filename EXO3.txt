@@ -1,0 +1,60 @@
+Dans ce fichier se trouvent les réponses aux question de l'exercice 3.
+
+***********************************Qu1.**************************************
+
+Temps de calcul pour la structure LC:
+//si le livre est présent
+- recherche par numéro:
+- recherche par titre:
+- recherche par auteur:
+
+//si le livre est absent
+- recherche par numéro:
+- recherche par titre:
+- recherche par auteur:
+
+Temps de calcul pour la structure Hachée:
+//si le livre est présent
+- recherche par numéro:
+- recherche par titre:
+- recherche par auteur:
+
+//si le livre est absent
+- recherche par numéro:
+- recherche par titre:
+- recherche par auteur:
+
+
+
+***********************************Qu2.**************************************
+
+Temps de calcul en fonction de la taille de la table de hashage:
+taille = 100 -> temps = 
+taille = 300 -> temps = 
+taille = 500 -> temps = 
+taille = 1000 -> temps = 
+taille = 3000 -> temps = 
+taille = 5000 -> temps = 
+taille = 50000 -> temps = 
+
+
+
+***********************************Qu3.**************************************
+
+Temps de calcul en fonction de la taille de la bibliothèque prise en entrée.
+
+Structure LC:
+n = 1000
+n = 5000
+n = 10000
+n = 15000
+n = 30000
+n = 50000
+
+Structure table de hashage:
+n = 1000
+n = 5000
+n = 10000
+n = 15000
+n = 30000
+n = 50000
