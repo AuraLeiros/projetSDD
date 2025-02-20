@@ -144,11 +144,29 @@ LivreH* recherche_auteur(BiblioH* b, char* auteur){
     if (!b || !auteur){
         fprintf(stderr, "Erreur dans les parametres\n");
         return NULL;
-    }
+    }   
+
+    LivreH* res = NULL;
+    LivreH* head = NULL;
 
     int h = fonctionHachage(fonctionClef(auteur), b->m);
+    LivreH* curr = b->T[h];
+
+    while (curr){
+        if (strcmp(auteur, curr->auteur) == 0){
+            if (!head){
+                res = creer_livre(curr->num, auteur, curr->titre);
+                head = res;
+            } else {
+                res->suivant = creer_livre(curr->num, auteur, curr->titre);
+            }
+
+            res = res->suivant;
+        }
+        curr = curr->suivant;
+    }
     
-    return b->T[h];
+    return head;
 
 }
 

@@ -7,7 +7,7 @@ PROGRAMS = mainLC
 
 all: $(PROGRAMS)
 
-mainLC: mainLC.o biblioLC.o entreeSortieLC.o utils.o
+mainLC: mainLC.o biblioLC.o entreeSortieLC.o utils.o benchmarking.o
 	$(CC) $(CFLAGS) -o $@ $^
 
 mainLC.o: mainLC.c
@@ -21,6 +21,10 @@ entreeSortieLC.o: entreeSortieLC.c
 
 utils.o: utils.c
 	$(CC) $(CFLAGS) -c $<
+
+benchmarking.o: benchmarking.c
+	$(CC) $(CFLAGS) -c $<
+
 
 clean:
 	rm -f *.o *.gch *~ $(PROGRAMS)

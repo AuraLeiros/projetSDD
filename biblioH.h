@@ -4,9 +4,12 @@
 #define BIBLIOH_H
 
 #include <stdio.h>
+#include <unistd.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "benchmarking.h"
 
 typedef struct livreh {
     int cle;
@@ -35,6 +38,9 @@ LivreH* creer_livre(int num,char* titre,char* auteur);
 
 // Libération de la mémoire
 void liberer_livre(LivreH* l);
+
+// AUX: liberation d'une liste chainee de livres
+void auxLibererListeLivres(LivreH* l);
 
 // Créer une bibliotheque
 BiblioH* creer_biblio(int m);

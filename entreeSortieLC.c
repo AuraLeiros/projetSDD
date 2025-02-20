@@ -75,7 +75,7 @@ void afficher_livre(Livre* l){
         return;
     }
 
-    printf("Livre %d : Titre : %s Auteur : %s", l->num, l->titre, l->auteur);
+    printf("Livre %d : Titre : %s Auteur : %s\n", l->num, l->titre, l->auteur);
 
     return;
 }
@@ -130,6 +130,8 @@ Livre* recherche_titre(Biblio* b, char* titre){
         idx = idx->suiv;
     }
 
+    /* Le livre n'est pas dans la librarie*/
+    printf("Le livre n'est pas dans la bibliotheque\n");
     return NULL;
 }
 
@@ -155,6 +157,10 @@ Biblio* recherche_auteur(Biblio* b, char* auteur){
         }
 
         idx = idx->suiv;
+    }
+
+    if (!b->L){
+        printf("Le livre n'est pas dans la bibliotheque\n");
     }
 
     return newBiblio;

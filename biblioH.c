@@ -29,7 +29,7 @@ int fonctionHachage(int cle, int m){
 }
 
 // Creation d'un livre
-LivreH* creer_livre(int num,char* titre,char* auteur){
+LivreH* creer_livre(int num, char* titre, char* auteur){
     LivreH* newLivre = (LivreH*)malloc(sizeof(LivreH));
     if (!newLivre) {
         fprintf(stderr, "Erreur dans l'allocation memoire d'un nouveau livre\n");
@@ -56,6 +56,21 @@ void liberer_livre(LivreH* l){
     return;
 }
 
+void auxLibererListeLivres(LivreH* l){
+    if (!l) return;
+
+    LivreH* idx = l;
+    LivreH* tmp = NULL;
+
+    while (idx){
+        tmp = idx->suivant;
+        liberer_livre(idx);
+        idx = tmp;
+    }
+
+    return;
+}
+
 // Créer une bibliotheque
 BiblioH* creer_biblio(int m){
 
@@ -75,21 +90,14 @@ BiblioH* creer_biblio(int m){
 void liberer_biblio(BiblioH* b){
     if (!b) return;
 
-    LivreH* idx = NULL;
     LivreH* curr = NULL;
 
     for (int i = 0; i < b->m; i++){
         curr = b->T[i];
-        while (curr){
-            idx = curr;
-            curr = curr->suivant;
-            liberer_livre(idx);
-        }
-
-        b->T[i] = NULL;
-
+        auxLibererListeLivres(curr);
     }
 
+    free(b->T);
     free(b);
 
     return;

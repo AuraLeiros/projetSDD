@@ -1,0 +1,3 @@
+1. Change the flags of the benchmarking
+2. Fusion
+3. Exercise3

@@ -1,8 +1,8 @@
-
 #include "biblioH.h"
 #include "entreeSortieH.h"
 #include "utils.h"
 
+/* Le calcul de temps est sur des instructions du preprocesseur pour compiler avec le flag -benchmark */
 
 int main(int argc, char** argv){
 
@@ -21,6 +21,7 @@ int main(int argc, char** argv){
 
     char auteur[MAX_AUTEUR_LENGTH] = "";
     char titre[MAX_TITRE_LENGTH] = "";
+    double time = 0.0;
     int num = 0;
 
     LivreH* l = NULL;
@@ -38,7 +39,19 @@ int main(int argc, char** argv){
         switch(usrInput){
             case 1:
                 printf("--- Affichage ---\n");
+
+                #ifndef BENCHMARKFLAG
+                    benchmark(&time);
+                #endif
+
                 afficher_biblio(b);
+
+
+                #ifndef BENCHMARKFLAG
+                    benchmark(&time);
+                    printf("Le temps de calcul pour cette option est de %lf", time);
+                #endif
+
                 break;
                 printf("--- Fin affichage ---\n");
 
@@ -48,11 +61,20 @@ int main(int argc, char** argv){
 
                 readIdLivre(&num, auteur, titre);
 
+                #ifndef BENCHMARKFLAG
+                    benchmark(&time);
+                #endif
+
                 if (num >= 0 && auteur[0] != '\0' && titre[0] != '\0'){
                     inserer(b, num, titre, auteur);
                 } else {
                     printf("Erreur format\n");
                 }
+
+                #ifndef BENCHMARKFLAG
+                    benchmark(&time);
+                    printf("Le temps de calcul pour cette option est de %lf", time);
+                #endif
 
                 printf("--- Fin inserer livre ---\n");
 
@@ -63,13 +85,25 @@ int main(int argc, char** argv){
                 printf("Veuillez taper le numero:\n");
 
                 num = readInteger();
+
+                #ifndef BENCHMARKFLAG
+                    benchmark(&time);
+                #endif
+
                 l = recherche_numero(b, num);
+
+                #ifndef BENCHMARKFLAG
+                    benchmark(&time);
+                    printf("Le temps de calcul pour cette option est de %lf", time);
+                #endif
+
 
                 if (l) {
                     afficher_livre(l);
                 } else {
                     printf("Aucun livre n'a ete trouve avec le numero indique\n");
                 }
+
 
                 printf("--- Fin recherche par numero ---\n");
                 
@@ -82,7 +116,18 @@ int main(int argc, char** argv){
                 readTitre(titre);
 
                 if (titre[0] != '\0'){
+
+                    #ifndef BENCHMARKFLAG
+                        benchmark(&time);
+                    #endif
+
                     l = recherche_titre(b, titre);
+
+                    #ifndef BENCHMARKFLAG
+                        benchmark(&time);
+                        printf("Le temps de calcul pour cette option est de %lf", time);
+                    #endif
+
                 } else {
                     fprintf(stderr, "Erreur dans la lecture d'un titre\n");
                 }
@@ -97,7 +142,19 @@ int main(int argc, char** argv){
                 readAuteur(auteur);
 
                 if (auteur[0] != '\0'){
+
+                    #ifndef BENCHMARKFLAG
+                        benchmark(&time);
+                    #endif
+
                     l = recherche_auteur(b, auteur);
+
+
+                    #ifndef BENCHMARKFLAG
+                        benchmark(&time);
+                        printf("Le temps de calcul pour cette option est de %lf", time);
+                    #endif
+
                     if (!b->T){
                         fprintf(stderr, "Aucun livre avec le nom indique à ete trouve\n");
                     }
@@ -115,7 +172,20 @@ int main(int argc, char** argv){
                 readIdLivre(&num, auteur, titre);
 
                 if (num >= 0 && auteur[0] != '\0' && titre[0] != '\0'){
+
+                    #ifndef BENCHMARKFLAG
+                        benchmark(&time);
+                        printf("Le temps de calcul pour cette option est de %lf", time);
+                    #endif
+
                     suppresion_ouvrage(b, num, titre, auteur);
+
+
+                    #ifndef BENCHMARKFLAG
+                        benchmark(&time);
+                        printf("Le temps de calcul pour cette option est de %lf", time);
+                    #endif
+
                 } else {
                     fprintf(stderr, "Erreur dans les parametres\n");
                 }
@@ -124,12 +194,35 @@ int main(int argc, char** argv){
 
             case 7:
                 printf("--- Fusion libraries ---\n");
-                fprintf(stderr, "Impossible de faire une option, on a pas d'autres libraries !");
+
+                #ifndef BENCHMARKFLAG
+                    benchmark(&time);
+                #endif
+
+                //TO-DO
+
+                #ifndef BENCHMARKFLAG
+                    benchmark(&time);
+                    printf("Le temps de calcul pour cette option est de %lf", time);
+                #endif
+
                 printf("--- Fin Fusion libraries ---\n");
                 
             case 8:
                 printf("--- Recherche Multiples ---\n");
+
+                #ifndef BENCHMARKFLAG
+                    benchmark(&time);
+                #endif
+
                 l = recherche_multiple(b);
+
+
+                #ifndef BENCHMARKFLAG
+                    benchmark(&time);
+                    printf("Le temps de calcul pour cette option est de %lf", time);
+                #endif
+
                 printf("--- Fin Recherche Multiples ---\n");
 
 

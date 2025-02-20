@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 #include "macros.h"
+#include "benchmarking.h"
 
 void menu();
 
