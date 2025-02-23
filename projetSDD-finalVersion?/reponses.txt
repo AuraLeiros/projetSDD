@@ -1,0 +1,247 @@
+Anna Stanischewsky - anna.stanischewsky@etu.sorbonne-universite.fr
+Aura Leirós García - aura.leiros@etu.sorbonne-universite.fr
+
+Unité : microsecondes (ms)
+
+Note au lecteur: Notre implementation des tests de temps d'execution ne fonctionne que sur systemes UNIX, dû à l'utilisation de clock_gettime() dans notre fonction de benchmarking.
+
+Réponses Q3:
+
+Q.3.1
+
+Méthodologie :
+
+	On a créé une fonction (executionCherche, dans le fichier entreeSortie de chaque question) 
+	qui exécute "ite" fois chaque fonction de recherche, sauvegarde dans un tableau le temps d'exécution,
+	puis effectue un qsort pour ordonner le tableau et pouvoir calculer la médiane, qui est plus représentative.
+	
+	
+On éxécute 100 fois chaque fonction pour chaque cas figure.
+
+- Pour 5000 entrées:
+	- num, titre et auteur non presents:
+		- LC: 
+			recherche_numero
+			ITR: 100
+			MOY: 11.879080
+			MED: 9.447998
+
+			recherche_titre
+			ITR: 100
+			MOY: 27.593290
+			MED: 15.403999
+
+			recherche_auteur
+			ITR: 100
+			MOY: 42.415340
+			MED: 14.737999
+			
+		- TH: 
+			recherche_numero
+			ITR: 100
+			MOY: 31.217840
+			MED: 26.555500
+
+			recherche_titre
+			ITR: 100
+			MOY: 67.062370
+			MED: 35.112000
+
+			recherche_auteur
+			ITR: 100
+			MOY: 67.153870
+			MED: 0.080002
+				
+		
+		
+	- num, titre et auteur presents:
+		- LC:
+			recherche_numero
+			ITR: 100
+			MOY: 9.832770
+			MED: 9.423000
+
+			recherche_titre
+			ITR: 100
+			MOY: 25.185420
+			MED: 15.354500
+
+			recherche_auteur
+			ITR: 100
+			MOY: 40.141790
+			MED: 14.787998
+			
+		- TH:
+			recherche_numero
+			ITR: 100
+			MOY: 32.835950
+			MED: 20.740002
+
+			recherche_titre
+			ITR: 100
+			MOY: 72.955120
+			MED: 36.378998
+
+			recherche_auteur
+			ITR: 100
+			MOY: 73.059521
+			MED: 0.090000
+
+	
+- Pour 25000 entrées:
+	- num, titre et auteur non presents:
+		- LC: 
+			recherche_numero
+			ITR: 100
+			MOY: 50.485750
+			MED: 46.868998
+
+			recherche_titre
+			ITR: 100
+			MOY: 134.444580
+			MED: 83.288000
+
+			recherche_auteur
+			ITR: 100
+			MOY: 215.577630
+			MED: 77.036999
+			
+		- TH: 
+			recherche_numero
+			ITR: 100
+			MOY: 358.707430
+			MED: 332.606501
+
+			recherche_titre
+			ITR: 100
+			MOY: 722.370990
+			MED: 359.798002
+
+			recherche_auteur
+			ITR: 100
+			MOY: 722.778870
+			MED: 0.381001
+			
+	- num, titre et auteur presents:
+		- LC:
+			recherche_numero
+			ITR: 100
+			MOY: 60.902700
+			MED: 46.719000
+
+			recherche_titre
+			ITR: 100
+			MOY: 146.562240
+			MED: 83.889500
+
+			recherche_auteur
+			ITR: 100
+			MOY: 226.420560
+			MED: 77.562502
+
+			
+		- TH:
+			recherche_numero
+			ITR: 100
+			MOY: 186.102820
+			MED: 171.370001
+
+			recherche_titre
+			ITR: 100
+			MOY: 568.067430
+			MED: 366.475498
+
+			recherche_auteur
+			ITR: 100
+			MOY: 568.472200
+			MED: 0.391003
+		
+- Pour 99000 entrées:
+	- num, titre et auteur non presents:
+		- LC: 
+			recherche_numero
+			ITR: 100
+			MOY: 297.173450
+			MED: 246.462999
+
+			recherche_titre
+			ITR: 100
+			MOY: 680.423120
+			MED: 352.844501
+
+			recherche_auteur
+			ITR: 100
+			MOY: 1055.625640
+			MED: 343.442001
+			
+		- TH: 
+			recherche_numero
+			ITR: 100
+			MOY: 9544.374420
+			MED: 9963.347000
+
+			recherche_titre
+			ITR: 100
+			MOY: 16978.781770
+			MED: 7769.456001
+
+			recherche_auteur
+			ITR: 100
+			MOY: 16981.272410
+			MED: 2.163998
+		
+	- num, titre et auteur presents:
+		- LC:
+			recherche_numero
+			ITR: 100
+			MOY: 60.317730
+			MED: 56.843000
+
+			recherche_titre
+			ITR: 100
+			MOY: 433.662820
+			MED: 351.843000
+
+			recherche_auteur
+			ITR: 100
+			MOY: 794.509270
+			MED: 342.039499
+		- TH:
+			recherche_numero
+			ITR: 100
+			MOY: 2611.189270
+			MED: 1939.176500
+
+			recherche_titre
+			ITR: 100
+			MOY: 9025.589220
+			MED: 6584.115002
+
+			recherche_auteur
+			ITR: 100
+			MOY: 9028.605030
+			MED: 2.730497
+			
+Ce qui confirme que pour une recherche par numéro ou titre, une implémentation avec des listes chaînées est bien plus rapide,
+bien que pour une recherche par auteur, qui utilise le hachage, le temps d'exécution soit sans doute meilleur
+
+Q. 3.2
+
+(Réalisé sur la machine pour ne pas rendre le fichier .txt trop long)
+
+On voit que le temps d'éxécution des fonctions avec une implementation séquentielle croît exponentiellement, notamment dans le cas
+où l'élément souhaitée n'appartient pas à la bibliothèque.
+
+Q. 3.3 
+
+Pour générer les fichiers avec lesquelles on a crée les courbes il faut exécuter l'option 11 de chaque main qui appelle la fonction
+executionRechercheMultiple qui calcule [10000, 50000] avec un pas intermediaire de 2500. Il faut simplement tracer les coubes à l'aide
+de gnuplot dans le terminal avec la commande "set autoscale" et puis "plot 'rechercheMultiplesLC.txt' using 1:2 title 'time'" (si on 
+trace la courbe pour LC, sinon le fichier s'appelle 'rechercheMultiplesH.txt').
+
+Q. 4.4
+
+On obtient deux courbes assez différentes, celle pour la recherche dans une liste chaînée est de forme d'une demi-hyperbole ce qui
+s'explique avec la complexité pire cas étant en O(n^2). Pour la recherche des multiples dans une table de hashage a complexité est
+de O(n), vérifiée par la courbe qui est en effet linéaire (on s'est permit de faire un curvefit sur la courbeH pour mieux visualiser
+l'allure de celle-ci).
