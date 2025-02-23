@@ -74,7 +74,7 @@ void afficher_livre(LivreH* l){
         return;
     }
 
-    printf("Livre %d : Titre : %s Auteur : %s", l->num, l->titre, l->auteur);
+    printf("Livre num : %d\n Titre : %s\n Auteur : %s\n", l->num, l->titre, l->auteur);
 
     return;
 }

@@ -1,10 +1,9 @@
 #include "benchmarking.h"
 
-
-double benchmark(double* time){
-    if (*time == 0.0){
-        return (double)clock();
+void benchmark(double* time) {
+    if (*time == 0.0) {
+        *time = (double)clock() / CLOCKS_PER_SEC;
     } else {
-        return ((double)clock() / CLOCKS_PER_SEC) - (*time);
+        *time = ((double)clock() / CLOCKS_PER_SEC) - (*time); 
     }
 }

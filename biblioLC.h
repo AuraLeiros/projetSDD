@@ -30,6 +30,9 @@ Livre* creer_livre(int num,char* titre,char* auteur);
 // Libération de la mémoire
 void liberer_livre(Livre* l);
 
+// AUX: liberation d'une liste chainee de livres
+void auxLibererListeLivres(Livre* l);
+
 // Créer une bibliotheque
 Biblio* creer_biblio();
 

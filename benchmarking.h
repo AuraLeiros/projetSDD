@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <time.h>
 
-double benchmark(double* time);
+void benchmark(double* time);
 
 
 

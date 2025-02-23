@@ -2,11 +2,19 @@
 
 /* Fonction auxiliaire pour afficher le menu */
 void menu(){
+    printf("\n");
     printf("----- Options -----\n");
     printf("0 - Sortie du programme\n");
     printf("1 - Affichage\n");
     printf("2 - Inserer ouvrage\n");
+    printf("3 - Recherche par Numero\n");
+    printf("4 - Recherche par titre\n");
+    printf("5 - Recherche par auteur\n");
+    printf("6 - Suppresion ouvrage\n");
+    printf("7 - Fusion des libraries\n");
+    printf("8 - Recherche multiples\n");
     printf("-------------------\n");
+    printf("\n");
 }
 
 /* Fonction auxiliaire pour montrer l'usage du programme */
@@ -34,7 +42,6 @@ void readStr(char* buffer, int max_buffer){
     if (!fgets(buffer, max_buffer, stdin)){
         fprintf(stderr, "Erreur dans la lecture depuis le stdin\n");
     }
-
 }
 
 /* Lire le nom d'un auteur depuis le stdin*/
@@ -78,5 +85,19 @@ void readIdLivre(int* num, char* auteur, char* titre){
     readAuteur(auteur);
     printf("Veuillez ecrire le titre:\n");
     readTitre(titre);
+
+}
+
+
+void readFilename(char* filename){
+    
+    char buffer[MAX_FILENAME_LENGTH];
+
+    printf("Veuillez inserer le chemin du fichier: \n");
+    readStr(buffer, MAX_FILENAME_LENGTH);
+
+    if ((sscanf(buffer, "%s", filename) != 1) || (access(filename, F_OK) != 0)) {
+        fprintf(stderr, "Erreur dans la lecture du nouveau fichier\n");
+    }
 
 }

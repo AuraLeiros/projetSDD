@@ -39,4 +39,8 @@ void readTitre(char* titre);
 /* Lire le numero, auteur et titre d'un livre */
 void readIdLivre(int* num, char* auteur, char* titre);
 
+/* Lire le nom d'un fichier et garantir les droits d'access */
+void readFilename(char* filename);
+
+
 #endif

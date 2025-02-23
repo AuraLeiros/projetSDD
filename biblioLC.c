@@ -29,6 +29,23 @@ void liberer_livre(Livre* l){
     return;
 }
 
+// AUX: liberation d'une liste chainee de livres
+void auxLibererListeLivres(Livre* l){
+    if (!l) return;
+
+    Livre* tmp = l;
+
+    while (l){
+        tmp = l->suiv;
+        liberer_livre(l);
+        l = tmp;
+    }
+
+    return;
+
+}
+
+
 // Créer une bibliotheque
 Biblio* creer_biblio(){
 
@@ -50,11 +67,7 @@ void liberer_biblio(Biblio* b){
 
     Livre* idx;
 
-    while(b->L){
-        idx = b->L;
-        b->L = b->L->suiv;
-        liberer_livre(idx);
-    }
+    auxLibererListeLivres(b->L);
 
     free(b);
 
