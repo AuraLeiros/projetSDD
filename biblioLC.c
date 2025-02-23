@@ -65,8 +65,6 @@ Biblio* creer_biblio(){
 void liberer_biblio(Biblio* b){
     if (!b) return;
 
-    Livre* idx;
-
     auxLibererListeLivres(b->L);
 
     free(b);

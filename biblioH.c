@@ -90,10 +90,11 @@ BiblioH* creer_biblio(int m){
 void liberer_biblio(BiblioH* b){
     if (!b) return;
 
+    LivreH** cases = b->T;
     LivreH* curr = NULL;
 
-    for (int i = 0; i < b->m; i++){
-        curr = b->T[i];
+    for (int i=0; i < (b->m); i++){
+        curr = cases[i];
         auxLibererListeLivres(curr);
     }
 
@@ -115,6 +116,8 @@ void inserer(BiblioH* b, int num, char* titre, char* auteur){
     
     newLivre->suivant = b->T[h];
     b->T[h] = newLivre;
+
+    b->nE++;
 
     return;
 }

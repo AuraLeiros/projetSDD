@@ -5,15 +5,16 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <string.h>
+#include <time.h>
+
 
 #include "macros.h"
-#include "benchmarking.h"
+
 
 void menu();
 
 void usage(char* nomProgramme);
-
-
 
 /* Tests the input and returns the number of lines */
 int testInputs(int argc, char** argv);
@@ -41,6 +42,27 @@ void readIdLivre(int* num, char* auteur, char* titre);
 
 /* Lire le nom d'un fichier et garantir les droits d'access */
 void readFilename(char* filename);
+
+/* --------------------------*/
+/* Fonctions de Benchmarking */
+/* -------------------------*/
+
+/* Fonction pour faire le calcul (en ms) d'execution d'une fonction
+    Notre implementation ne fonctionne que sur systemes UNIX !!
+*/
+void benchmark(double* time);
+
+/* Fonction pour allouer et initialiser un tableau de double */
+double* newArray(int n);
+
+/* Fonction pour ajouter un element à un array */
+void addElementArray(double* array, int* size, double elem, int maxSize);
+
+/* Fonction auxiliaire a qsort pour comparer deux doubles */
+int comparaisonDouble(const void *a, const void *b);
+
+/* Fonction pour calculer la mediane d'un tableau */
+double mediane(double* array, int nElem);
 
 
 #endif

@@ -1,6 +1,5 @@
 #include "entreeSortieH.h"
 
-
 // Charger n livres depuis le fichier
 BiblioH* charger_n_entrees(char* nomfic, int n){
 
@@ -46,8 +45,7 @@ void enregistrer_biblio(BiblioH *b, char* nomfic){
         return;
     }
 
-
-    FILE* f = fopen(nomfic, "a");
+    FILE* f = fopen(nomfic, "w");
     if (!f){
         fprintf(stderr, "Erreur dans l'ouverture du fichier\n");
         return;
@@ -74,9 +72,23 @@ void afficher_livre(LivreH* l){
         return;
     }
 
-    printf("Livre num : %d\n Titre : %s\n Auteur : %s\n", l->num, l->titre, l->auteur);
+    printf("Livre %d : Titre : %s Auteur : %s\n", l->num, l->titre, l->auteur);
 
     return;
+}
+
+void auxAfficherListeLivres(LivreH* l){
+    if (!l) return;
+    
+    LivreH* idx = l;
+
+    while (idx) {
+        afficher_livre(idx);
+        idx = idx->suivant;
+    }
+
+    return;
+
 }
 
 // Affichage bibliotheque
@@ -86,13 +98,12 @@ void afficher_biblio(BiblioH* b){
         return;
     }
 
+    LivreH** cases = b->T;
+
     printf("Bibliotheque :\n\n");
 
-    for(int i = 0; i < (b->m); i++){
-        while (b->T[i]){
-            afficher_livre(b->T[i]);
-            b->T[i] = b->T[i]->suivant;
-        }
+    for (int i = 0; i < (b->m); i++){
+        auxAfficherListeLivres(cases[i]);
     }
 
     return;
@@ -106,14 +117,20 @@ LivreH* recherche_numero(BiblioH* b, int num){
         return NULL;
     }
 
-    for(int i = 0; i < (b->m); i++){
-        while (b->T[i]){
-            if( b->T[i]->num == num ) return b->T[i];
-            b->T[i] = b->T[i]->suivant;
+    LivreH** cases = b->T;
+    LivreH* idx = NULL;
+
+    for (int i = 0; i < (b->m); i++){
+        idx = cases[i];
+        while (idx){
+            if (idx->num == num) return idx;
+            idx = idx->suivant;
+
         }
     }
 
     return NULL;
+
 }
 
 // Recherche titre (meme chose que pour le numero)
@@ -123,13 +140,12 @@ LivreH* recherche_titre(BiblioH* b, char* titre){
         return NULL;
     }
 
-    for (int i = 0; i < b->m; i++){
-        LivreH* idx = b->T[i];
+    LivreH** cases = b->T;
+    LivreH* idx = NULL;
 
-        /* Cas 1: Librarie vide*/
-        if (!idx) return NULL;
-
-        while (idx) {
+    for (int i = 0; i < (b->m); i++){
+        idx = cases[i];
+        while(idx){
             if (strcmp(idx->titre, titre) == 0) return idx;
             idx = idx->suivant;
         }
@@ -137,10 +153,9 @@ LivreH* recherche_titre(BiblioH* b, char* titre){
 
     return NULL;
 }
-/* TO-ASK: Can we return a linked list of livreH* */
+
 // Recherche un livre par auteur (plus rapide que pour une bibliotheque en liste chainee car cle de hachage definie a partir de l'auteur)
 LivreH* recherche_auteur(BiblioH* b, char* auteur){
-
     if (!b || !auteur){
         fprintf(stderr, "Erreur dans les parametres\n");
         return NULL;
@@ -154,21 +169,24 @@ LivreH* recherche_auteur(BiblioH* b, char* auteur){
 
     while (curr){
         if (strcmp(auteur, curr->auteur) == 0){
+            // Create a new LivreH node
+            LivreH* newLivre = creer_livre(curr->num, curr->titre, auteur);
+            
+            // If head is null, assign the first result
             if (!head){
-                res = creer_livre(curr->num, auteur, curr->titre);
-                head = res;
+                head = newLivre;
+                res = head;
             } else {
-                res->suivant = creer_livre(curr->num, auteur, curr->titre);
+                res->suivant = newLivre; // Link the current node
+                res = res->suivant;      // Move res to the next node
             }
-
-            res = res->suivant;
         }
         curr = curr->suivant;
     }
     
     return head;
-
 }
+
 
 // Supprime un ouvrage dans bibliotheque
 BiblioH* suppresion_ouvrage(BiblioH * b, int num, char* titre, char* auteur){
@@ -198,15 +216,45 @@ BiblioH* suppresion_ouvrage(BiblioH * b, int num, char* titre, char* auteur){
         currentNode = currentNode->suivant;
     }
 
-    if (!currentNode) fprintf(stderr, "Le livre n'a pas ete trouve dans la librarie\n");
+    if (!currentNode) fprintf(stderr, "Le livre n'a pas ete trouve dans la bibliotheque\n");
 
     return b;
 }
 
+void fusion_bibliotheques(BiblioH* b1, BiblioH* b2){
+    /* On suppose que les deux bibliotheques utilisent la meme fonction de hachage */
+    if (!b1 && !b2){
+        fprintf(stderr, "Erreur dans les parametres\n");
+        return;
+    }
+
+    LivreH** casesb2 = b2->T;
+    LivreH* idx = NULL;
+
+    for (int i = 0; i < (b2->m); i++){
+        idx = casesb2[i];
+        while (idx){
+            inserer(b1, b1->nE, idx->titre, idx->auteur);
+            idx = idx->suivant;
+        }
+    }
+
+    liberer_biblio(b2);
+
+    return;
+}
+
+/* 
+
+Dans le cas des tables de hachage, pour pouvoir garantir la fusion meme avec une taille different
+et pouvoir avoir un numero unique pour chaque livre il faut ajouter a nouveau chaque element dans la table
+en tout cas on a fait cette implementation similaire aux listes chainees
+
+
 // Fusion de deux bibliotheques
 BiblioH* fusion_bibliotheques(BiblioH* b1, BiblioH* b2){
     //on suppose que les deux bibliotheques dependent de la meme fonction de hachage et ont la meme taille b->m
-    if (!b1 || !b2) {
+    if (!b1 && !b2) {
         fprintf(stderr, "Erreur dans les parametres\n");
         return NULL;
     }
@@ -226,6 +274,7 @@ BiblioH* fusion_bibliotheques(BiblioH* b1, BiblioH* b2){
     return b1;
 }
 
+*/
 
 LivreH* recherche_multiple(BiblioH* b){
     if (!b || !(b->T)) {
@@ -233,14 +282,17 @@ LivreH* recherche_multiple(BiblioH* b){
         return NULL;
     }
 
+    LivreH** cases = b->T;
+
     LivreH* curr = NULL;
     LivreH* res = NULL;
     LivreH* tmp = NULL;
     LivreH* head = NULL;
     LivreH* tail = NULL;
 
-    for (int i=0; i < b->m; i++){
-        curr = b->T[i];
+    for (int i=0; i < (b->m); i++){
+
+        curr = cases[i];
 
         auxRechercheAll(curr, &head, &tail);
 
@@ -259,7 +311,6 @@ LivreH* recherche_multiple(BiblioH* b){
     }
 
     return res;
-
 }
 
 void auxRechercheAll(LivreH* lcourant, LivreH** head, LivreH** tail){
@@ -283,4 +334,116 @@ void auxRechercheAll(LivreH* lcourant, LivreH** head, LivreH** tail){
 
         idx = idx->suivant;
     }
+}
+
+
+// Fonctions de benchmarking
+
+
+void executionRecherche(BiblioH* b, int ite, int num, char* titre, char* auteur){
+
+    printf("Temps d'execution - Tables de hachage\n\n");
+
+    printf("Nombre d'iterations : %d\n\n", ite);
+
+    double time = 0.0;
+    double sum = 0.0;
+    double* array = newArray(ite);
+
+    /* Recherche par numero */
+    for (int i=0; i < ite; i++){
+        benchmark(&time);
+        recherche_numero(b, num);
+        benchmark(&time);
+        
+        sum += time;
+        array[i] = time;
+
+        time = 0.0;
+    }
+
+    qsort(array, ite, sizeof(double), comparaisonDouble);
+    printf("recherche_numero\nITR: %d\nMOY: %lf\nMED: %lf\n\n", ite, (sum / ite), mediane(array, ite));
+
+    /* Recherche par titre */
+    for (int i=0; i < ite; i++){
+        benchmark(&time);
+        recherche_titre(b, titre);
+        benchmark(&time);
+        
+        sum += time;
+        array[i] = time;
+
+        time = 0.0;
+    }
+
+    qsort(array, ite, sizeof(double), comparaisonDouble);
+    printf("recherche_titre\nITR: %d\nMOY: %lf\nMED: %lf\n\n", ite, (sum / ite), mediane(array, ite));
+
+    /* Recherche auteur */
+    for (int i=0; i < ite; i++){
+        benchmark(&time);
+        recherche_auteur(b, auteur);
+        benchmark(&time);
+        
+        sum += time;
+        array[i] = time;
+
+        time = 0.0;
+    }
+
+    qsort(array, ite, sizeof(double), comparaisonDouble);
+    printf("recherche_auteur\nITR: %d\nMOY: %lf\nMED: %lf\n\n", ite, (sum / ite), mediane(array, ite));
+
+    
+    free(array);
+}
+
+void executionRechercheMultiple(char* nomfic){
+
+    BiblioH* b = NULL;
+    LivreH* l = NULL;
+    double time = 0.0;
+    int ite = 0;
+    int n = 1000;
+
+    FILE* f = fopen("rechercheMultiplesH.txt", "w");
+    if (!f){
+        fprintf(stderr, "Erreur dans l'ouverture d'un fichier\n");
+        return;
+    }
+
+    fprintf(f, "time\tn\n");
+
+    while (n <= 50000){
+        
+        b = charger_n_entrees(nomfic, n);
+        if (!b){
+            fprintf(stderr, "Erreur dans le chargement de %d entrees", n);
+            fclose(f);
+            return;
+        }
+
+        benchmark(&time);
+        l = recherche_multiple(b);
+        benchmark(&time);
+
+        fprintf(f, "%lf\t%d", time, n);
+        if ((n + 2500) < 50000){
+            fprintf(f, "\n");
+        }
+
+        liberer_biblio(b);
+        auxLibererListeLivres(l);
+
+        time = 0.0;
+        ite++;
+        printf("ITE: %d\n", ite);
+        n += 2500;
+    }
+
+    printf("Execution reussie, %d iterations\n", ite);
+
+    fclose(f);
+    return;
 }

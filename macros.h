@@ -12,6 +12,9 @@
 /* Macros main-related*/
 #define MAX_INT_BUFF 32
 #define MAX_FILENAME_LENGTH 256
-#define NB_OPTIONS 8
+#define NB_OPTIONS 11
+
+/* Benchmark-related macros */
+#define MAX_ARRAY_SIZE 1000
 
 #endif

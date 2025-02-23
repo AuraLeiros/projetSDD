@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "benchmarking.h"
 
 typedef struct livreh {
     int cle;

@@ -2,6 +2,7 @@
 #define ENTREESORTIELC_H
 
 #include "biblioLC.h"
+#include "utils.h"
 #include "macros.h"
 
 // Charger n livres depuis le fichier
@@ -12,6 +13,8 @@ void enregistrer_biblio(Biblio *b, char* nomfic);
 
 // Afficher un livre
 void afficher_livre(Livre* l);
+
+void auxAfficherListeLivres(Livre* l);
 
 // Affichage bibliotheque
 void afficher_biblio(Biblio* b);
@@ -29,7 +32,7 @@ Biblio* recherche_auteur(Biblio* b, char* auteur);
 void suppresion_ouvrage(Biblio* b, int num, char* titre, char* auteur);
 
 // Fusion de deux bibliotheques
-Biblio* fusion_bibliotheques(Biblio* b1, Biblio* b2);
+void fusion_bibliotheques(Biblio* b1, Biblio* b2);
 
 // Recherche de tous les ouvrages avec plusieurs exemplaires
 Livre* recherche_multiple(Biblio* b);
@@ -37,6 +40,12 @@ Livre* recherche_multiple(Biblio* b);
 // Fonction auxiliaire à recherche_multiple
 void auxRechercheAll(Livre* l, Livre* lcourant, Livre** head, Livre** tail);
 
+
+/* Fonctions de benchmarking */
+
+void executionRecherche(Biblio* b, int ite, int num, char* titre, char* auteur);
+
+void executionRechercheMultiple(char* nomfic);
 
 
 

@@ -19,7 +19,9 @@ int main(int argc, char** argv){
     int usrInput;
     char auteur[MAX_AUTEUR_LENGTH] = "";
     char titre[MAX_TITRE_LENGTH] = "";
+    char filename[MAX_FILENAME_LENGTH] = "";
     int num = 0;
+    int ite = 0;
 
     #ifdef BENCHMARKFLAG
         double time = 0.0;
@@ -36,6 +38,7 @@ int main(int argc, char** argv){
             continue;
         }
 
+
         switch(usrInput){
             case 0:
                 break;
@@ -43,16 +46,7 @@ int main(int argc, char** argv){
             case 1:
                 printf("--- Affichage ---\n");
 
-                #ifdef BENCHMARKFLAG
-                    benchmark(&time);
-                #endif
-
                 afficher_biblio(b);
-
-                #ifdef BENCHMARKFLAG
-                    benchmark(&time);
-                    printf("Le temps de calcul pour cette option est de %lf", time);
-                #endif
 
                 printf("--- Fin affichage ---\n");
 
@@ -60,24 +54,15 @@ int main(int argc, char** argv){
 
             case 2: 
                 printf("--- Inserer livre ---\n");
-                printf("Veuillez ecrire le numero, le titre et l'auteur de l'ouvrage :\n");
 
-                readIdLivre(&num, auteur, titre);
+                readTitre(titre);
+                readAuteur(auteur);
 
-                #ifdef BENCHMARKFLAG
-                    benchmark(&time);
-                #endif
-
-                if (num >= 0 && auteur[0] != '\0' && titre[0] != '\0'){
-                    inserer(b, num, titre, auteur);
+                if (auteur[0] != '\0' && titre[0] != '\0'){
+                    inserer(b, (b->nE), titre, auteur);
                 } else {
                     printf("Erreur format\n");
                 }
-
-                #ifdef BENCHMARKFLAG
-                    benchmark(&time);
-                    printf("Le temps de calcul pour cette option est de %lf", time);
-                #endif
 
                 printf("--- Fin inserer livre ---\n");
 
@@ -89,17 +74,7 @@ int main(int argc, char** argv){
 
                 num = readInteger();
 
-                #ifdef BENCHMARKFLAG
-                    benchmark(&time);
-                #endif
-
                 l = recherche_numero(b, num);
-
-                #ifdef BENCHMARKFLAG
-                    benchmark(&time);
-                    printf("Le temps de calcul pour cette option est de %lf", time);
-                #endif
-
 
                 if (l) {
                     afficher_livre(l);
@@ -120,19 +95,11 @@ int main(int argc, char** argv){
 
                 if (titre[0] != '\0'){
 
-                    #ifdef BENCHMARKFLAG
-                        benchmark(&time);
-                    #endif
-
                     l = recherche_titre(b, titre);
-
-                    #ifdef BENCHMARKFLAG
-                        benchmark(&time);
-                        printf("Le temps de calcul pour cette option est de %lf", time);
-                    #endif
 
                     if (l){
                         afficher_livre(l);
+                        auxLibererListeLivres(l);
                     } else {
                         printf("Aucun livre n'a ete trouve avec le titre indique\n");
                     }
@@ -141,31 +108,27 @@ int main(int argc, char** argv){
                     fprintf(stderr, "Erreur dans la lecture d'un titre\n");
                 }
 
-                printf("--- Fin recherche par titre ---");
+                printf("--- Fin recherche par titre ---\n");
 
                 break;
 
             case 5:
-                printf("--- Recherche auteur ---");
+                printf("--- Recherche auteur ---\n");
 
                 readAuteur(auteur);
 
                 if (auteur[0] != '\0'){
 
-                    #ifdef BENCHMARKFLAG
-                        benchmark(&time);
-                    #endif
-
                     l = recherche_auteur(b, auteur);
 
-                    #ifdef BENCHMARKFLAG
-                        benchmark(&time);
-                        printf("Le temps de calcul pour cette option est de %lf", time);
-                    #endif
-
-                    if (b->T){
+                    if (l){
+                        auxAfficherListeLivres(l);
+                        auxLibererListeLivres(l);
+                    } else {
                         printf("Aucun livre avec le nom indique à ete trouve\n");
                     }
+
+                    
 
                 } else {
                     fprintf(stderr, "Erreur de lecture\n");
@@ -182,17 +145,7 @@ int main(int argc, char** argv){
 
                 if (num >= 0 && auteur[0] != '\0' && titre[0] != '\0'){
 
-                    #ifdef BENCHMARKFLAG
-                        benchmark(&time);
-                        printf("Le temps de calcul pour cette option est de %lf", time);
-                    #endif
-
                     suppresion_ouvrage(b, num, titre, auteur);
-
-                    #ifdef BENCHMARKFLAG
-                        benchmark(&time);
-                        printf("Le temps de calcul pour cette option est de %lf", time);
-                    #endif
 
                 } else {
                     fprintf(stderr, "Erreur dans les parametres\n");
@@ -203,8 +156,6 @@ int main(int argc, char** argv){
             case 7:
                 printf("--- Fusion libraries ---\n");
 
-                char filename[MAX_FILENAME_LENGTH];
-
                 readFilename(filename);
                 if (filename[0] == '\0'){
                     fprintf(stderr, "Erreur dans la lecture du fichier\n");
@@ -212,6 +163,8 @@ int main(int argc, char** argv){
                 }
 
                 printf("Veuillez taper le numero de lignes à lire: ");
+                fflush(stdout);
+
                 num = readInteger();
                 if (num == -2 || num <= 0){
                     fprintf(stderr, "Erreur dans la lecture du nombre de lignes à lire\n");
@@ -224,43 +177,48 @@ int main(int argc, char** argv){
                     break;
                 }
 
-                #ifdef BENCHMARKFLAG
-                    benchmark(&time);
-                #endif
-
-                BiblioH* fusionBibliotheques = fusion_bibliotheques(b, newBiblio);
-
-                #ifdef BENCHMARKFLAG
-                    benchmark(&time);
-                    printf("Le temps de calcul pour cette option est de %lf", time);
-                #endif
-
-                if (!fusionBibliotheques || !fusionBibliotheques->T){
-                    fprintf(stderr, "Erreur dans la fusion des bibliotheques\n");
-                } else {
-                    printf("Fusion reussie\n");
-                }
-
-                liberer_biblio(fusionBibliotheques);
+                fusion_bibliotheques(b, newBiblio);
 
                 printf("--- Fin Fusion libraries ---\n");
+                break;
                 
             case 8:
                 printf("--- Recherche Multiples ---\n");
 
-                #ifdef BENCHMARKFLAG
-                    benchmark(&time);
-                #endif
-
                 l = recherche_multiple(b);
 
-                #ifdef BENCHMARKFLAG
-                    benchmark(&time);
-                    printf("Le temps de calcul pour cette option est de %lf", time);
-                #endif
+                if (l){
+                    auxAfficherListeLivres(l);
+                } else {
+                    printf("Aucun livre dupliquee n'a pas ete trouve\n");
+                }
 
                 printf("--- Fin Recherche Multiples ---\n");
                 break;
+
+            case 9:
+                printf("--- Enregistrer bibliotheque ---\n");
+                enregistrer_biblio(b, argv[1]);
+                printf("--- Fin Enregistrer biblioteque ---\n");
+
+                break;
+            
+            case 10:
+                printf("--- Temps d'execution ---\n");
+                printf("Veuillez ecrire le nombre d'iterations souhaitées : ");
+                ite = readInteger();
+                readIdLivre(&num, auteur, titre);
+
+                executionRecherche(b, ite, num, auteur, titre);
+                printf("--- Fin temps d'execution ---\n");
+                break;
+
+            case 11:
+                printf("--- Temps d'execution ---\n");
+                executionRechercheMultiple(argv[1]);
+                printf("--- Fin temps d'execution ---\n");
+                break;
+
 
 
             default:
@@ -272,12 +230,10 @@ int main(int argc, char** argv){
             time = 0.0;
         #endif
 
-        if (l) auxLibererListeLivres(l);
-        if (newBiblio) liberer_biblio(newBiblio);
-
     } while (usrInput != 0);
 
     liberer_biblio(b);
+    if (newBiblio) liberer_biblio(newBiblio);
 
     printf("Merci et au revoir !\n");
 
